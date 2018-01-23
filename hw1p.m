@@ -81,7 +81,7 @@ productCheck = A * B
 % dimensions.
 
 Im = imread('pittsburgh.png');
-size(Im);
+size(Im)
 
 % 13. Convert this image to grayscale
 
@@ -91,10 +91,9 @@ G = rgb2gray(Im);
 % equality to a scalar, to determine and write down how many pixels
 % in the grayscale image are equal to 6. Don't use loops.
 
-%GD = im2double(G);
 clear sum;
 G2 = G;
-S = sum(G(:) == 6);
+S = sum(G(:) == 6)
 
 % 15.Find the darkest pixel in the image, and write its value and
 % [row, column] in your answer sheet. Don't use loops. Hint:
@@ -102,10 +101,10 @@ S = sum(G(:) == 6);
 % Matlab's help to find out how to use that function.
 
 GA = G(:);
-D = min(GA);
+D = min(GA)
 IND = find(GA == D);
 GS = size(G);
-[I, J] = ind2sub(GS, IND);
+[I, J] = ind2sub(GS, IND)
 
 
 % 16. Consider a 31x31 square (a square with side equal to 31
@@ -125,9 +124,9 @@ end
 % loops. Hint: You can access a range of rows and columns in 
 % a matrix; think about how.
 
-S = size(G)
-MR = ceil(S(1)/2)
-MC = ceil(S(2)/2)
+S = size(G);
+MR = ceil(S(1)/2);
+MC = ceil(S(2)/2);
 G(MR-60:MR+60, MC-60:MC+60) = 150;
 
 % 18. Make a new figure, display the modified image (which 
@@ -135,7 +134,7 @@ G(MR-60:MR+60, MC-60:MC+60) = 150;
 %the new figure to a file using saveas(gcf, 'new_image.png').
 
 figure; imshow(G)
-%saveas(gcf, 'new_image.png');
+saveas(gcf, 'new_image.png');
 
 
 % 19. Using the original pittsburgh.png image, compute the 
