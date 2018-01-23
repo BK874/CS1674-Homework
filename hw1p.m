@@ -80,22 +80,51 @@ productCheck = A * B
 % 12. Read this image into Matlab as a matrix, and write down its
 % dimensions.
 
-I = imread('pittsburgh.png');
-size(I)
+Im = imread('pittsburgh.png');
+size(Im);
 
 % 13. Convert this image to grayscale
 
-G = rgb2gray(I); figure; imshow(G);
+G = rgb2gray(Im); figure; imshow(G);
 
 % 14. Use the function sum and a logical operator which measures
 % equality to a scalar, to determine and write down how many pixels
 % in the grayscale image are equal to 6. Don't use loops.
 
-G = double(G);
+%GD = im2double(G);
 clear sum;
-S = sum(G(:) == 6)
+G2 = G;
+S = sum(G(:) == 6);
 
-% 15Find the darkest pixel in the image, and write its value and
+% 15.Find the darkest pixel in the image, and write its value and
 % [row, column] in your answer sheet. Don't use loops. Hint:
 % Convert to a vector first, and use Matlab's ind2sub function. Use
 % Matlab's help to find out how to use that function.
+
+GA = G(:);
+D = min(GA);
+IND = find(GA == D);
+GS = size(G);
+[I, J] = ind2sub(GS, IND);
+
+
+% 16. Consider a 31x31 square (a square with side equal to 31
+% pixels) that is centered on the darkest pixel from question
+% 14. Replace all pixels in that square with white pixels (pixels
+% with value 255). Do this with loops.
+
+for i = I-15:I+15
+    for j = J-15:J+15
+        G(i, j) = 255;
+    end
+end
+
+figure; imshow(G)
+
+% 17. Take the previous image with the white square in it. 
+% Place a 121x121 gray square (e.g. pixel values 150) at the 
+% center of this image. This time you are NOT allowed to use 
+% loops. Hint: You can access a range of rows and columns in 
+% a matrix; think about how.
+
+
