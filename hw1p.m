@@ -85,7 +85,7 @@ size(Im);
 
 % 13. Convert this image to grayscale
 
-G = rgb2gray(Im); figure; imshow(G);
+G = rgb2gray(Im);
 
 % 14. Use the function sum and a logical operator which measures
 % equality to a scalar, to determine and write down how many pixels
@@ -119,12 +119,44 @@ for i = I-15:I+15
     end
 end
 
-figure; imshow(G)
-
 % 17. Take the previous image with the white square in it. 
 % Place a 121x121 gray square (e.g. pixel values 150) at the 
 % center of this image. This time you are NOT allowed to use 
 % loops. Hint: You can access a range of rows and columns in 
 % a matrix; think about how.
 
+S = size(G)
+MR = ceil(S(1)/2)
+MC = ceil(S(2)/2)
+G(MR-60:MR+60, MC-60:MC+60) = 150;
+
+% 18. Make a new figure, display the modified image (which 
+% includes both a white square and gray square), and save
+%the new figure to a file using saveas(gcf, 'new_image.png').
+
+figure; imshow(G)
+%saveas(gcf, 'new_image.png');
+
+
+% 19. Using the original pittsburgh.png image, compute the 
+% scalar average pixel value along each channel (R, G, B) 
+% separately, then subtract the average value per channel.
+% Display the resulting image and write it to a file
+% mean_sub.png. If you choose to do this using a new matrix
+% as your image, make sure it is of the same class/datatype
+% (uint8) as the original image; a simple cast would do the job.
+% You may use loops.
+
+AS = sum(sum(Im));
+IS = size(Im);
+RAVG = AS(1)/(IS(1) * IS(2));
+GAVG = AS(2)/(IS(1) * IS(2));
+BAVG = AS(3)/(IS(1) * IS(2));
+
+Im(:, :, 1) = Im(:, :, 1) - RAVG;
+Im(:, :, 2) = Im(:, :, 2) - GAVG;
+Im(:, :, 3) = Im(:, :, 3) - BAVG;
+
+figure; imshow(Im)
+saveas(gcf, 'mean_sub.png');
 
