@@ -3,4 +3,4 @@
 
 function [B] = normalize_columns(A)
 
-B = A./sum(A)
+B = A./sum(A);
