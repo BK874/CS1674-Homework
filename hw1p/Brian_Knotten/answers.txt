@@ -1,0 +1,10 @@
+Brian Knotten
+HW1P Answers
+
+2. Time with loops: 0.025117 seconds
+3. Time without loops: 0.0022974 seconds
+12. pittsburgh.png dimensions: 750x1500x3
+14. Number of pixels equal to 6: 12
+15. Darkest pixel value: 5
+    Darkest pixel [row, column]: [604, 1290]
+
