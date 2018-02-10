@@ -45,8 +45,11 @@ sobelY = sobelX';
 
 % Horizontal Gradient:
 Ih = imfilter(imgD, sobelX);
+Ih2 = Ih.^2;
 % Vertical Gradient:
-Ic = imfilter(imgD, sobelY);
+Iv = imfilter(imgD, sobelY);
+Iv2 = Iv.^2;
+Ihv = Ih.*Iv;
 
 % Zero matrix to store "cornerness" of each pixel
 imgSize = size(imgD);
@@ -67,13 +70,15 @@ for i = 1:imgSize(1)
         M = zeros(2, 2);
         for x = i-1:i+1
             for y = j-1:j+1
-                M(1, 1) = M(1, 1) + Ih(x, y)^2;
-                M(1, 2) = M(1, 2) + Ih(x, y) * Iv(x, y);
-                M(2, 1) = M(2, 1) + Ih(x, y) * Iv(x, y);
-                M(2, 2) = M(2, 2) + Iv(x, y)^2;
+                if (x > 0 && x <= imgSize(1) && y > 0 && y <= imgSize(2))
+                    M(1, 1) = M(1, 1) + Ih2(x, y);
+                    M(1, 2) = M(1, 2) + Ihv(x, y);
+                    M(2, 1) = M(2, 1) + Ihv(x, y);
+                    M(2, 2) = M(2, 2) + Iv2(x, y);
+                end
             end
         end
-        R(i, j) = det(M) - k(trace(M))^2;
+        R(i, j) = det(M) - k*(trace(M)^2);
     end
 end
 
@@ -84,4 +89,61 @@ end
 % average R score. Alternatively, you can simply output the top n
 % keypoints (e.g. top 1%).
 
-threshold = 50000; % Currently arbitrary
+% Set threshold
+threshold = 5 * mean2(R);
+% Collect those above threshold
+above = {};
+
+for i=1:imgSize(1)
+    for j=1:imgSize(2)
+        if R(i, j) > threshold
+            above = [above, [i, j]];
+        end
+    end
+end
+aboveSize = size(above);
+% 4. [10 pts] Perform non-maximum suppression by removing those
+% keypoints whose R score is not larger than all of their 8
+% neighbors; if a keypoint does not have 8 neighbors, remove
+% it. The scores/x/y that you output should correspond to the final
+% set of keypoints, after non-max suppression. Tip: Don't remove
+% indices while looping over pixels; instead keep a vector of
+% indices you want to remove, then set the keypoints at those
+% indices to [].
+
+scores = []; x = []; y = []; test = true;
+
+for k = 1:aboveSize(2)
+    for i = above{k}(1)-1:above{k}(1)+1
+        for j = above{k}(2)-1:above{k}(2)+1
+            if (i == above{k}(1) && j == above{k}(2))
+                % Intentionally blank
+            elseif (i < 1 || i > imgSize(1) || j < 1 || j > imgSize(2))
+                test = false;
+            elseif  (R(above{k}(1), above{k}(2)) <= R(i, j))
+                test = false;
+            end
+        end
+    end
+    if test == true
+        scores = [scores(1:end) R(above{k}(1), above{k}(2))];
+        x = [x(1:end) above{k}(2)];
+        y = [y(1:end) above{k}(1)];
+    end
+    test = true;
+end
+
+% 5. [10 pts] Display the input image, and visualize the keypoints
+% you have detected, for example by drawing circles over them. Use
+% the scores variable and make keypoints with higher scores
+% correspond to larger circles, e.g. plot(x(i), y(i), 'ro',
+% 'MarkerSize', scores(i) / 1000000000); Include the visualization
+% for three images in your submission (named vis1.png, vis2.png,
+% vis3.png).
+
+figure; imshow(image);
+hold on;
+for i = 1:size(x, 2)
+    plot(x(i), y(i), 'ro', 'MarkerSize', abs(scores(i)/5));
+end
+hold off;
